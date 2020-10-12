@@ -29,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
         setToolbar();
         drawerLayout = findViewById(R.id.drawerLayout);
         navigationView = findViewById(R.id.navView);
+        defaultFragment();
+
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -36,9 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
                 boolean fragmentTransaction = false;
                 Fragment fragment = null;
-            /**
-             *
-             */
+                item.setChecked(false);
                 switch (item.getItemId()) {
                     case R.id.menu_mail:
                         fragment =  new EmailFragment();
@@ -61,15 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 if(fragmentTransaction){
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.contentFrame , fragment)
-                            .commit();
-                    //Para que se checkee la opción activa
-                    item.setChecked(true);
-                    //Añadir el nombre de la sección a la barra de acción
-                    getSupportActionBar().setTitle(item.getTitle());
-                    drawerLayout.closeDrawers();
+                    changeFragment(fragment, item);
                 }
                 return false;
             }
@@ -81,6 +74,22 @@ public class MainActivity extends AppCompatActivity {
         //Flecha atrás o icono
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void changeFragment(Fragment fragment, MenuItem item) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.contentFrame , fragment)
+                .commit();
+        //Para que se checkee la opción activa
+        item.setChecked(true);
+        //Añadir el nombre de la sección a la barra de acción
+        getSupportActionBar().setTitle(item.getTitle());
+        drawerLayout.closeDrawers();
+    }
+
+    private void defaultFragment(){
+        changeFragment(new EmailFragment(), navigationView.getMenu().getItem(0));
     }
 
     //Opciones para activar el nav_menu con
